@@ -1,0 +1,267 @@
+create table employee(
+EMP_ID int primary key, ENAME varchar(30) not null,
+GENDER char(1) check Gender=’M’ or ‘F’, SALARY money not null,
+ADDRESS varchar(25) not null, DESIGNATION varchar(30) not null
+)
+insert into employee values(1001,'Priyanshi','F',50000,'uttarpradesh','Assistant manager'); insert into employee values(1002,'Rishab','M',100000,'Maharastra','Manager')
+insert into employee values(1003,'Sandeep','M',60000,'Andhra Pradesh','Chef') insert into employee values(1004,'Anuradha','F',70000,'Maharastra','Chef') insert into employee values(1005,'Suresh','M',30000,'Tamilnadu','Waiter')
+select *from employee
+Output:
+
+EMP_ID	ENAME	GENDER	SALARY	ADDRESS	DESIGNATION
+1001	Priyanshi	F	50000.00	uttarpradesh	Assistant manager
+1002	Rishab	M	100000.00	Maharastra	Manager
+1003	Sandeep	M	60000.00	Andhra Pradesh	Chef
+1004	Anuradha	F	70000.00	Maharastra	Chef
+1005	Suresh	M	30000.00	Tamilnadu	Waiter
+
+/*create a table Customer*/ create table customer(
+CUS_ID int primary key, CNAME varchar(30) not null, DATE date not null,
+PHONE varchar(12) not null, ADDRESS varchar(25) null
+)
+ 
+insert into customer values(501,'Yogendra','2023-04-01',9876512345,'Tirupati') insert into customer values(502,'Ramu','2022-09-02',8876512345,'Nellore') insert into customer values(503,'Divya','2023-04-14',9080712045'Kerela')
+insert into customer values(504,'Sravanthi','2023-05-12',7893456789,'Andhra Pradesh') insert into customer values(505,'Rishitha','2023-04-11',7656578908,'Tamilnadu')
+select * from customer
+Output:
+
+CUS_ID	CNAME	DATE	PHONE	ADDRESS
+501	Yogendra	2023-04-01	9876512345	Tirupati
+502	Ramu	2022-09-02	8876512345	Nellore
+503	Divya	2023-04-14	9080712045	Kerela
+504	Sravanthi	2023-05-12	7893456789	Andhra Pradesh
+505	Rishitha	2023-04-11	7656578908	Tamilnadu
+
+
+/*create a table Menu*/ create table menu(
+DISH_ID int primary key, DNAME varchar(30) not null, PRICE money not null,
+TYPE varchar(10) null
+)
+insert into menu values(01,'Panner curry',180,'Veg') insert into menu values(02,'Egg rice',200,'Non-veg') insert into menu values(03,'Chicken rice',110,'Non-veg')
+insert into menu values(04,'Lolly pop rice',180,'Non-Veg')
+insert into menu values(05,'Chicken saucy lollypop',300,'Non-veg') select *from menu
+Output:
+
+DISH_ID	DNAME	PRICE	TYPE
+1	Panner curry	180.00	Veg
+2	Egg rice	200.00	Non-veg
+3	Chicken rice	110.00	Non-veg
+4	Lolly pop rice	180.00	Non-Veg
+5	Chicken saucy lollypop	300.00	Non-veg
+
+ 
+
+/* create a table Orders*/
+create table Orders(
+ORDER_ID INT PRIMARY KEY,
+CUS_ID int f.K references customer(cus_id), DISH_ID int foreign key references menu(dish_id), MODE_OF_ORDER varchar(20) not null,
+PRICE money not null
+)
+insert into Orders values(201,501,01,'online',180) insert into Orders values(202,502,02,'online',180) insert into Orders values(203,503,17,'Offline',250) insert into Orders values(204,504,10,'Offline',150) insert into Orders values(205,505,18,'Offline',250)
+select *from orders
+Output:
+
+ORDER_ID	CUS_ID	DISH_ID	MODE_OF_ORDER	PRICE
+201	501	1	online	180.00
+202	502	2	online	180.00
+203	503	17	Offline	250.00
+204	504	10	Offline	150.00
+205	505	18	Offline	250.00
+
+/* create a table Waiter*/ create table Waiter(
+Waiter_id int foreign key references employee(emp_id), WNAMEvarchar(30) not null,
+MOBILE VARCHAR(12) not null,
+ADDRESS varchar(25) null
+)
+insert into Waiter values(1005,'Suresh','9050221456','Tamilnadu') insert into Waiter values(1006,'Ramya','9000151450','Tamilnadu')
+insert into Waiter values(1008,'Alekhya','8979767543','Andhra Pradesh') select * from Waiter
+Output:
+
+Waiter_id	WNAME	MOBILE	ADDRESS
+1005	Suresh	9050221456	Tamilnadu
+1006	Ramya	9000151450	Tamilnadu
+1008	Alekhya	8979767543	Andhra Pradesh
+
+ 
+/*create table Store*/
+create table store(
+ITEM_ID int primary key,
+Emp_id int foreign key references employee(Emp_id), INAME varchar(25) not null,
+STATUS VARChar(30) not null
+)
+insert into store values(4001,1010,'onions','available') insert into store values(4002,1011,'rice','available') insert into store values(4003,1016,'garlic','not-available')
+insert into store values(4004,1017,'masala items','available') insert into store values(4005,1001,'vegetables','available')
+select * from store
+Output:
+
+ITEM_ID	Emp_id	INAME	STATUS
+4001	1010	onions	available
+4002	1011	rice	available
+4003	1016	garlic	not-available
+4004	1017	masala items	available
+4005	1001	vegetables	available
+
+/* create table Feedback*/ create table feedback(
+CUS_ID int foreign key references customer(cus_id), SERVICE varchar(15) not null,
+SUGGESTIONS varchar(25) null, FOOD_RATING int check FD b/n 1 &10,
+)
+insert into feedback values(501,'Excellent','increase items',10) insert into feedback values(502,'Good',null,8)
+insert into feedback values(503,'Good','Add more flavors',8)
+
+select *from feedback
+OUTPUT:
+
+CUS_ID	SERVICE	SUGGESTIONS	FOOD_RATING
+501	Excellent	increase items	10
+502	Good	NULL	8
+503	Good	Add more flavors	8
+
+ 
+/*create table Branch */
+create table branch(
+BID int primary key, BNAME varchar(30) not null,
+RATTING VARCHAR(5) NOT NULL,
+BLOCATION varchar(30) not null, PINCODE int not null
+)
+insert into branch values(701,'Chillies','A++','Tirupathi',517101) insert into branch values(702,'Chillies','A','Hyderabad',285001) insert into branch values(703,'Table_9','A+','Tirupathi',517101) insert into branch values(704,'pepper-salt','A+','banglore',517211) insert into branch values(705,'pulse','A++','hyderabad',285001)
+select * from branch
+Output:
+
+BID	BNAME	RATTING	BLOCATION	PINCODE
+701	Chillies	A++	Tirupathi	517101
+702	Chillies	A	Hyderabad	285001
+703	Table_9	A+	Tirupathi	517101
+704	pepper-salt	A+	banglore	517211
+705	pulse	A++	hyderabad	285001
+
+/*create table Owner */ create table owner(
+OWNER_ID int primary key, OWNERNAME varchar(30) not null,
+BID int foreign key references branch(bid), BNAME VARCHAR(25) not null,
+MOBILE varchar(12) not null
+)
+insert into owner values(801,'Girish reddy',701,'Chillies','9896959493') insert into owner values(802,'Lokesh naidu',702,'Chillies','7013216789') insert into owner values(803,'Satya Srinivas',703,'Table_9','7089563412') select * from owner
+Output:
+
+OWNER_ID	OWNERNAME	BID	BNAME	MOBILE
+801	Girish reddy	701	Chillies	9896959493
+802	Lokesh naidu 702	Chillies	7013216789
+803	Satya Srinivas 703	Table_9	7089563412
+
+ 
+
+/*create table Chef */
+create table chef(
+CHEF_ID int foreign key references employee(emp_id), CNAME varchar(30) not null,
+SALARY money not null, SPECIALIZATION varchar(20) not null, MOBILE VARCHAR(12) not null,
+ADDRESS varchar(25) null
+)
+
+insert into chef values(1003,'Sandeep',60000,'Veg-staters','8822331234','Andhra Pradesh') insert into chef values(1004,'Anuradha',70000,'Biryani','8786858483','Maharastra')
+insert into chef values(1009,'Madhavi',60000,'Rice items','8789807213','Kerela')
+insert into chef values(1015,'Srikanth',25000,'Statters','9789807213','Himachal pradesh') select * from chef
+Output:
+CHEF_ID CNAME	SALARY SPECIALIZATION MOBILE	ADDRESS
+
+1003	Sandeep	60000.00	Veg-staters	8822331234	Andhra Pradesh
+1004	Anuradha	70000.00	Biryani	8786858483	Maharastra
+1009	Madhavi	60000.00	Rice items	8789807213	Kerela
+1015	Srikanth	25000.00	Statters	9789807213	Himachal pradesh
+
+/*create table online_ords*/ create table online_ords(
+ONLINE_ORD_ID int primary key, CUSTOMER_ID int f.k ref cust(cus_id) CNAME varchar(30) not null,
+DISH_ID int f.Kreferences menu(DISH_ID), DNAME varchar(30) not null,
+DATE date not null, PRICE money not null
+)
+insert into online_ords values(2001,501,'yogendra',01,'paneer curry','2023-04-01',180) insert into online_ords values(2002,502,'ramu',02,'egg rice','2023-04-05',180)
+insert into online_ords values(2003,506,'charan',20,'kaju biryani','2023-05-06',250) select * from online_ords
+Output:
+online_ord_id CUSTOMER_IDCNAME	DISH_ID	DNAME	DATE PRICE
+
+2001	501	yogendra	1	paneer curry	2023-04-01	180.00
+2002	502	ramu	2	egg rice	2023-04-05	180.00
+2003	506	charan	20	kaju biryani	2023-05-06	250.00
+ 
+ 
+
+/*create table deliver_boy*/
+create table DELIVER_BOY(
+DELIVERBOY_ID int primary key, DNAME varchar(30) not null, SALARY money not null, MOBILE varchar(12) not null, ADDRESS varchar(25) null,
+)
+
+insert into deliver_boy values(301,'sherath',15000,7356920287,'Chittoor') insert into deliver_boy values(302,'srikanth',15000,7356989287,'Tirupati') insert into deliver_boy values(303,'rishi',15000,7356920097,'nellore’) insert into deliver_boy values(304,'ganesh',15000,8956920287,'kalahasti')
+insert into deliver_boy values(305,'pradeep',15000,9856920287,'nizamabad') select * from deliver_boy
+Output:
+
+DELIVERBOY_ID	DNAME	SALARY	MOBILE	ADDRESS
+301	sherath	15000.00	7356920287	Chittoor
+302	srikanth	15000.00	7356989287	Tirupati
+303	rishi	15000.00	7356920097	nellore
+304	ganesh	15000.00	8956920287	kalahasti
+305	pradeep	15000.00	9856920287	nizamabad
+
+/*create table home_delivery*/ create table HOME_DELIVERY
+(
+DELIVERBOY_ID int f.kdeliver_boy(DELIVERBOY_ID), ORDER_ID int foreign key references orders(order_id), CUS_ID int foreign key references customer(CUS_ID), MOBILE varchar(12) not null,
+ADDRESS varchar(25) not null
+)
+insert into home_delivery values(301,201,501,9876512345,'Tirupati') insert into home_delivery values(302,203,503,9080712045,'kerala') insert into home_delivery values(303,209,520,9770767654,'kerala') insert into home_delivery values(304,210,525,7680767654,'ongole') insert into home_delivery values(305,211,519,9980767654,'Ananthapur')
+ 
+Output:
+DELIVERBOY_ID	
+ORDER_ID	
+CUS_ID	
+MOBILE	
+ADDRESS
+301	201	501	9876512345	Tirupati
+302	203	503	9080712045	kerala
+303	209	520	9770767654	kerala
+304	210	525	7680767654	ongole
+305	211	519	9980767654	Ananthapur
+/*create table tables*/ create table TABLES(				
+TABLE_ID int primary key, FLOOR int unique not null, NOOF_SEATERS int not null
+)
+insert into tables values(401,2,4) insert into tables values(402,1,6) insert into tables values(403,3,8) insert into tables values(404,4,10) insert into tables values(405,5,2)
+select * from tables
+Output:
+
+TABLE_ID	FLOOR	NOOF_SEATERS
+401	2	4
+402	1	6
+403	3	8
+404	4	10
+405	5	2
+
+/*create table booking*/ create table BOOKING(
+BOOKING_ID int primary key,
+TABLE_ID int foreign key references tables(table_id), CUS_ID int foreign key references customer(cus_id), TYPE varchar(10) check(type='AC' or type='NON-AC'), DATE date not null,
+)
+insert into booking values(901,401,501,'AC','2023-04-01')
+insert into booking values(902,402,502,'NON-AC','2022-09-02') insert into booking values(903,403,503,'AC','2023-04-14')
+insert into booking values(904,404,504,'NON-AC','2023-05-12')
+ 
+insert into booking values(905,405,505,'AC','2023-04-11') select *from booking
+Output:
+
+BOOKING_ID	TABLE_ID	CUS_ID	TYPE	DATE
+901	401	501	AC	2023-04-01
+902	402	502	NON-AC	2022-09-02
+903	403	503	AC	2023-04-14
+904	404	504	NON-AC	2023-05-12
+905	405	505	AC	2023-04-11
+
+/*create table bill*/ 
+create table BILL(
+CUS_ID int foreign key references customer(cus_id), CNAME varchar(30) not null,
+TOTAL_PRICE money not null, DATE date not null,
+)
+insert into bill values(501,'yogendra',380,'2023-04-01') insert into bill values(502,'ramu',330,'2022-09-02') insert into bill values(503,'divya',250,'2023-04-14') insert into bill values(504,'sravanthi',150,'2023-05-12') insert into bill values(505,'rishitha',250,'2023-04-11')
+select * from bill
+Output:
+
+CUS_ID	CNAME	TOTAL_PRICE	DATE
+501	yogendra	380.00	2023-04-01
+502	ramu	330.00	2022-09-02
+503	divya	250.00	2023-04-14
+504	sravanthi	150.00	2023-05-12
+505	rishitha	250.00	2023-04-11
+
