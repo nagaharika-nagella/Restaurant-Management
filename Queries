@@ -1,0 +1,519 @@
+Query1: Create a seperate menu for vegetarian customers-(temporary table)
+select * into Veg_menu from menu where TYPE='Veg' select * from Veg_menu
+output:
+DISH_ID	DNAME	PRICE	TYPE
+1	Panner curry	180.00	Veg
+6	Mixed-veg curry	160.00	Veg
+7	Kaju curry	180.00	Veg
+8	Mushroom curry	190.00	Veg
+9	Panner butter masala	200.00	Veg
+10	Zeera rice	150.00	Veg
+11	Lemon rice	150.00	Veg
+12	Palav	150.00	Veg
+13	Plane rice	120.00	Veg
+14	Tomato rice	140.00	Veg
+15	Coconut rice	160.00	Veg
+16	Curd rice	120.00	Veg
+17	Panner Biryani	250.00	Veg
+18	Mushroom Biryani	250.00	Veg
+19	Veg dham Biryani	280.00	Veg
+20	kaju Biryani	250.00	Veg
+21	Gobi marchuria	180.00	Veg
+22	Chilli Gobi	200.00	Veg
+23	Panner chilli	200.00	Veg
+24	Gobi 65	180.00	Veg
+
+Query2: create a separate table for online orders where cooking time is more than 20 minutes
+select *into online_dishes from online_ords where COOKING_TIME>'20 min' select *from online_dishes
+output:
+online_ord_id CUSTOMER_ID DISH_ID	DNAME	COOKING_TIME	PRICE
+2001	501	1	paneer curry	30 min	180.00
+2002	502	2	egg rice	30 min	180.00
+2004	513	31	special dum biryani	30 min	300.00
+ 
+Query3: create a view from customers which includes CID, CName ,email,address of customers of whose names starts with vowels.
+create view customer_details as(
+select CUS_ID, CName,email,address
+from customer where cname like '[a,e,i,o,u]%') select * from customer_details
+output:
+CUS_ID	CName	email	address
+515	Anand	anand456@gmail.com
+vijayawada
+516	Akash	akash097@gmail.com
+Nellore
+517	Arjun	arjun9778@gmail.com
+Tiruupati
+526	Eshwar	eshwar23@gmail.com
+Tamilnadu
+527	Indu	indup23@gmail.com
+Banglore
+
+Query4: create a view from booking includes cus id, table id,noof seaters
+create view booking_details as(
+select b.cus_id, t.table_id,t.noof_seaters from TABLES t,booking b where b.table_id=t.table_id and t.noof_seaters>6
+)
+select * from booking_details
+output:
+cus_id	table_id	noof_seaters
+503	403	8
+504	404	10
+508	408	12
+509	409	8
+
+Query5: Find the dish name of customers what they have ordered
+select c.cus_id,c.cname,o.dish_id from customer c,orders o where c.cus_id=o.cus_id select c.cus_id,c.cname,o.dish_id,d.dname from customer c,orders o,menu d where c.cus_id=o.cus_id and o.dish_id=d.dish_id
+output:
+cus_id	cname	dish_id
+501	Yogendra	1
+502	Ramu	2
+503	Divya	17
+504	Sravanthi	10
+505	Rishitha	18
+ 
+Query6: get list of customers who have placed moe than 3 orders
+select c.cus_id,c.cname from customer c,orders o where c.cus_id=o.cus_id group by c.CUS_ID,c.CNAME having count(o.ORDER_ID)>3
+output:
+cus_id cname
+519	seeta
+
+Query7: update the salary of chef to 80,000 who is working in the night shift update employee set salary='80000' where shift='night' and DESIGNATION='chef' select * from employee
+output:
+EMP_ID ENAME	SALARY	SHIFT ADDRESS	DESIGNATION
+1001	Priyanshi	50000.00	day	uttarpradesh	Assistant manager
+1002	Rishab	100000.00	day	Maharastra	Manager
+1003	Sandeep	60000.00	day	Andhra Pradesh	Chef
+1004	Anuradha	70000.00	day	Maharastra	Chef
+1005	Suresh	30000.00	night	Tamilnadu	Waiter
+Query8: Find the ID's and names of customers who have given positive feedback (rating more than 8).
+select c.CUS_ID, c.CName from customer c,feedback f where c.CUS_ID=f.CUS_ID and FOOD_RATING>8
+output:
+CUS_ID	CName
+501	Yogendra
+504	Sravanthi
+509	Vikas
+
+Query9: find order ids,dish items along with their ids order by price
+select o.order_id,m.dname from orders o,menu m where o.DISH_ID=m.DISH_ID order by m.PRICE
+output:
+order_id	dname
+204	Zeera rice
+207	chicken kabab
+215	Lemon rice
+217	Lemon rice
+201	Panner curry
+202	Egg rice
+ 
+Query10: Display the total bill by the cus_id=519
+select o.CUS_ID,sum(o.price) as Total_price from orders o,menu m where o.dish_id=m.DISH_ID and o.CUS_ID=519
+group by o.CUS_ID
+output:
+CUS_ID	Total_price
+519	900.00
+Query11: display name of branch and owner of branch whogot highest rating among all branches
+select o.ownername ,b.bname,RATTING from owner o,branch b where b.bid=o.bid and b.RATTING='A++'
+output:
+ownername	bname	RATTING
+Girish reddy	Chillies	A++
+Namratha	pulse	A++ Mahesh	minerva	A++
+
+Query12: find out the customer name and id who booked in the year-2023 
+select c.cname ,t.table_id,b.date from customer c,tables t,booking b where c.cus_id=b.cus_id and t.TABLE_ID=b.TABLE_ID and b.date like '2023%' 
+output:
+cname	table_id	date
+Yogendra	401	2023-04-01
+Divya	403	2023-04-14
+Sravanthi	404	2023-05-12
+Rishitha	405	2023-04-11
+
+Query13: Find out employee whos salary is same as other employee salary
+select emp_id,ename,salary from employee where salary in (select salary from employee group by salary having count(*)>1)
+output:
+emp_id ename	salary
+1005	Suresh	30000.00
+1006	Ramya	20000.00
+1008	Alekhya	20000.00
+1010	Devi	20000.00
+1011	Akhil	20000.00
+1012	Nithin	30000.00
+1017	rahul	20000.00
+ 
+Query14: Find out employee whos salary is same as other employee salary and name starts with a
+select emp_id,ename,salary from employee where salary in (select salary from employee group by salary having count(*)>1 ) and
+ename like 'a%'
+output:
+emp_id	ename	salary
+1008	Alekhya	20000.00
+1011	Akhil	20000.00
+
+Query15: display the second highest dish price in the menu
+select dname,price from menu where price=(select max(price) from menu where price
+<>(select max(price ) from menu))
+output:
+dname	price
+Chicken saucy lollypop	300.00
+Special dum biryani	300.00
+fish fry	300.00
+
+Query16: find out the customers who made top 2 least bill
+select cus_id,cname,total_price from bill where total_price in
+(select top 2 total_price from bill order by total_price asc)
+output:
+cus_id	cname	total_price
+503	divya	250.00
+504	sravanthi	150.00
+505	rishitha	250.00
+506	charan	250.00
+
+Query17: Find out the customer name and id who rated above 8
+select f.cus_id,c.cname,f.FOOD_RATING from customer c,feedback f where c.CUS_ID=f.CUS_ID and f.FOOD_RATING in
+(select FOOD_RATING from feedback where FOOD_RATING>8)
+output:
+cus_id	cname	FOOD_RATING
+501	Yogendra	10
+504	Sravanthi	9
+509	Vikas	9
+ 
+Query18: Retrieve all the customers who have provided feedback
+SELECT *
+FROM customer c WHERE EXISTS (
+SELECT 1
+FROM feedback f
+WHERE f.cus_id = c.cus_id
+);
+output:
+CUS_ID	CNAME	DATE	PHONE	ADDRESS
+501	Yogendra	2023-04-01	9876512345	Tirupati
+502	Ramu	2022-09-02	8876512345	Nellore
+503	Divya	2023-04-14	9080712045	Kerela
+504	Sravanthi	2023-05-12	7893456789	Andhra Pradesh
+508	Mounika	2022-10-08	8639421609	Tirupati
+509	Vikas	2022-12-10	9080767654	Nellore
+
+Query19: Retrieve all the dishes in the menu that have been ordered
+SELECT *
+FROM menu m WHERE EXISTS (
+SELECT 1
+FROM orders o
+WHERE o.dish_id = m.dish_id
+)
+output:
+DISH_ID	DNAME	PRICE	TYPE
+1	Panner curry	180.00	Veg
+2	Egg rice	200.00	Non-veg
+10	Zeera rice	150.00	Veg
+11	Lemon rice	150.00	Veg
+17	Panner Biryani	250.00	Veg
+18	Mushroom Biryani	250.00	Veg
+20	kaju Biryani	250.00	Veg
+23	Panner chilli	200.00	Veg
+28	chicken lolly pop	200.00	Non-Veg
+31	Special dum biryani	300.00	Non-Veg
+34	chicken kabab	150.00	Non-Veg
+35	fish fry	300.00	Non-Veg
+ 
+Query20: Retrieve all the employees who are also waiters
+SELECT *
+FROM employee e WHERE EXISTS (
+SELECT 1
+FROM waiter w
+WHERE w.waiter_id = e.emp_id
+);
+output:
+EMP_ID ENAME	GENDER	SALARY	ADDRESS	DESIGNATION
+1005	Suresh	M	30000.00	Tamilnadu	Waiter
+1006	Ramya	F	20000.00	Tamilnadu	Waiter
+1008	Alekhya	F	20000.00	Andhra Pradesh	Waiter
+1012	Nithin	M	30000.00	Andhra Pradesh	Waiter
+
+Query21: Retrieve all the customers who have placed orders
+SELECT *
+FROM customer c WHERE EXISTS (
+SELECT 1
+FROM orders o
+WHERE o.cus_id = c.cus_id
+)
+output:
+CUS_ID	CNAME	DATE	PHONE	ADDRESS
+501	Yogendra	2023-04-01	9876512345	Tirupati
+502	Ramu	2022-09-02	8876512345	Nellore
+503	Divya	2023-04-14	9080712045	Kerela
+504	Sravanthi	2023-05-12	7893456789	Andhra Pradesh
+505	Rishitha	2023-04-11	7656578908	Tamilnadu
+506	Charan	2022-12-04	8876578901	Andhra Pradesh
+507	Ranbeer	2022-11-12	8876512345	Telangana
+508	Mounika	2022-10-08	8639421609	Tirupati
+509	Vikas	2022-12-10	9080767654	Nellore
+510	dhanalakshmi	2022-11-09	9880767654	Nellore
+513	kumar	2022-05-26	7650767654	kerala
+515	Anand	2022-12-11	9081234654	vijayawada
+519	seeta	2022-09-11	9980767654	Ananthapur
+520	lahari	2022-09-05	9770767654	kerala
+525	nani	2022-06-11	7680767654	ongole
+ 
+Query22: display the ids and names of deliver boys who delivers orders to home
+select d.deliverboy_id,d.dname from DELIVER_BOY as d where exists
+(select*from	HOME_DELIVERY	as	h	where d.DELIVERBOY_ID=h.DELIVERBOY_ID)
+output:
+deliverboy_id dname
+301	sherath
+302	srikanth
+303	rishi
+304	ganesh
+305	pradeep
+306	saketh
+
+Query23: find the average salary of employee who are working in the restaurent
+select designation,avg(salary) as Avg_salary from employee group by DESIGNATION order by Avg_salary
+output:
+designation	Avg_salary
+store manager	20250.00
+Waiter	25000.00
+Assistant manager	45000.00
+Receptionist	46000.00
+Chef	58750.00
+Manager	100000.00
+Query24: find out the table id which has maximimum no of seating capacity
+select max(NOOF_SEATERS) as Max_capacity from tables
+output:
+Max_capacity 12
+Query25: what is the maximum capacity of tables in the whole restaurent
+select sum(NOOF_SEATERS) as Total_capacity from tables
+output: Total_capacity 72
+ 
+Query 26: what is the least salary given to employee by the restaurent
+select min(salary) as Least_salary from employee
+output:
+Least_salary 20000.00
+Query 27: how many customers visited the restaurent
+select count(cus_id) as count from customer
+output:
+count 27
+
+Query 28: Find the age of employee who are working in the restaurant
+select datediff(YY,DOB,getdate()) as Age,ENAME from employee
+output:
+Age	ENAME
+25	Priyanshi
+26	Rishab
+35	Sandeep
+28	Anuradha
+25	Suresh
+24	Ramya
+26	Shekhar
+25	Alekhya
+25	Madhavi
+24	Devi
+28	Akhil
+27	Nithin
+26	vedaswini
+24	Jannifa
+27	Srikanth
+26	Bharat
+27	rahul
+ 
+Query 29: who are the employees who's name starts with 's'
+select * from employee where ename like 's%'
+output:
+EMP_ID	ENAME	SALARY	SHIFT	ADDRESS	DESIGNATION
+1003	Sandeep	60000.00	day	Andhra Pradesh	Chef
+1005	Suresh	30000.00	night	Tamilnadu	Waiter
+1007	Shekhar	40000.00	day	Maharastra	Assistant manager
+1015	Srikanth	25000.00	day	Himachal pradesh	chef
+
+Query 30: how are the deliver boys work in night shift and whose working days are more than 25
+select * from DELIVER_BOY where shift='night' and WORKINGDAYS_MONTH>25
+output:
+DELIVERBOY_ID	DNAME	SALARY	SHIFT	ADDRESS
+307	sasi	18000.00	night	sirivella
+309	tulasi	18000.00	night	banglore
+310	madhav	18000.00	night	Chittoor
+
+Query 31: Update the table relation by adding range as an attribute and datatype as varchar, constraint null and insert record into this attribute
+alter table tables add range varchar(15) null
+update tables set range='A' where table_id=401 update tables set range='A' where table_id=402 update tables set range='A' where table_id=403 select *from tables
+output:
+TABLE_ID	FLOOR	NOOF_SEATERS	range
+401	2	4	A
+402	1	6	A
+403	3	8	A
+
+Query 32: Find the total amount for each and every designation select sum(salary) as total_salary from employee group by designation output:
+total_salary 90000.00
+235000.00
+100000.00
+92000.00
+81000.00
+ 
+Query 33: Find the count of designation where designation is more than one time select count(EMP_ID) as count, designation from employee group by designation having count(designation)>1
+output:
+count designation
+2	Assistant manager
+4	Chef
+2	Receptionist
+4	store manager
+4	Waiter
+
+Query 34: Convert the names of the owner into uppercase in owner table
+select upper(ownername) as NAMES from owner
+output:
+NAMES GIRISH REDDY
+LOKESH NAIDU SATYA SRINIVAS RAJASEKHAR NAMRATHA MAHESH KISHORE HARISH RAO
+
+Query 35: Convert the names of deliver boy into lower case in deliver_boy table
+select lower(dname) as dname from deliver_boy where shift='night'
+output: dname saketh sasi teja tulasi madhav
+ 
+Query 36: Find the combination of both gender and specialization from chef
+select concat(gender,'+',specialization) as combine from chef
+output:
+combine M+Veg-staters F+Biryani F+Rice items M+Statters
+
+Query 37: write the pl/sql block to find the salary of an employee based on range
+declare ssalary int; range int; begin
+range:=&range;
+select salary into ssalary from employee where eid=1001; if ssalary>range then
+dbms_output.put_line(ssalary); else
+dbms_output.put_line('not foud'); end if;
+end;
+/
+output:
+Enter value for range: 30000 old 5: range:=&range;
+new 5: range:=30000;
+50000
+
+Query 38: write the pl/sql block to find the employee id’s from employee using loop
+declare
+eid int:=1001; begin
+for eid in 1001..1005 loop
+dbms_output.put_line('EID='||eid); end loop;
+end;
+/
+Output:
+EID=1001 EID=1002 EID=1003 EID=1004 EID=1005
+ 
+Query 39: write the pl/sql block to find the designation from employee using case
+declare salary int; begin
+salary:=&salary; case salary
+when 50000 then dbms_output.put_line('Manager'); when 45000 then dbms_output.put_line('Chef');
+when 20000 then dbms_output.put_line('Assistant manager'); when 30000 then dbms_output.put_line('store manager'); when 35000 then dbms_output.put_line('chef');
+else
+dbms_output.put_line('Invalid choice'); end case;
+end;
+Output:
+Enter value for salary: 45000 old 4: salary:=&salary;
+new 4: salary:=45000; Chef
+
+Query 40: write the pl/sql block to find the arithmetic operations on attribute salary using functions
+Create or replace function amop(sal1 in int, sal2 in int, c in varchar2) return int as
+result int; begin
+if c = '+' then
+result := sal1 + sal2; else if c = '-' then result := sal1 – sal2; else if c = '*' then result := sal1 * sal2; else
+result := null; end if;
+return result; end;
+Output:
+function created AMOP(35000,30000,'+')
+65000
+ 
+Query 41: write the pl/sql block to find the greatest salary among given salaries using procedures
+declare sal1 int; sal2 int; sal3 int; c int;
+a int; b int;
+procedure greatest(sal1 in int,sal2 in int,sal3 out int) is
+begin
+if sal1>sal2 then sal3:=sal1;
+else sal3:=sal2; end if;
+end; begin a:=&a;
+b:=&b; greatest(a,b,c);
+dbms_output.put_line('The greatest among'||sal1||'and'||sal2|| 'is' ||c); end;
+Output:
+Enter value for a: 20000 old 17: a:=&a;
+new 17: a:=20000;
+Enter value for b: 30000 old 18: b:=&b;
+new 18: b:=30000;
+The greatest amongandis30000
+Query 42: write the pl/sql block to find the eid, ename where eid=1005, if it is not found raise an exception
+declare eid int; eesal int; begin
+select eid,salary into eid,eesal from employee where eid=1005; dbms_output.put_line('Eid='||eid||'salary='||eesal);
+exception
+when no_data_found then dbms_output.put_line('No such employee exists'); when others then
+dbms_output.put_line('error...'); end;
+Output:
+Eid=1005 salary=35000
+ 
+Query 43: write the pl/sql block to find the quotient of an salary, if the process not done properly, then raise an exception
+declare
+sal1 int:=&sal1; sal2 int:=&sal2; salary int;
+exp1 exception; exp2 exception; begin
+if sal2=0 then raise exp1;
+else if sal2>sal1 then raise exp2; else
+salary:=sal1/sal2; dbms_output.put_line('Division='||salary); end if;
+end if; exception
+when exp1 then
+dbms_output.put_line('sal2 could not be zero!'); when exp2 then
+dbms_output.put_line('sal1 is always greater than y'); when others then
+dbms_output.put_line('error..!'); end;
+Output:
+Enter value for sal1: 10 old 2: sal1 int:=&sal1; new 2: sal1 int:=10; Enter value for sal2: 20 old 3: sal2 int:=&sal2; new 3: sal2 int:=20;
+sal1 is always greater than y
+
+Query 44: write the pl/sql block to update the salary using cursors
+declare eeid int; begin
+eeid:=&eeid;
+update employee set salary=salary+1000 where eid=eeid; if sql%found then
+dbms_output.put_line('record updated'); else
+dbms_output.put_line('no record found'); end if; end;
+Output:
+Enter value for eeid: 1003 old 4: eeid:=&eeid;
+new 4: eeid:=1003;
+record updated
+ 
+Query 45: write the pl/sql block to find details of a employee whose salary is maximum using cursors
+declare
+cursor c1 is select eid,ename,salary from employee where salary=(select max(salary) from employee);
+eeid int;
+eename employee.ename%type; ssalary int;
+begin open c1; loop
+fetch c1 into eeid, eename, ssalary; exit when c1%NOTFOUND;
+dbms_output.put_line(eeid || chr(9) || eename || chr(9) || ssalary); END LOOP;
+close c1; end; Output:
+1001	priyanshi	50000
+Query 46: Create a trigger to display when we insert a record into employee
+create or replace trigger emp before insert on employee begin
+dbms_output.put_line('Record inserted'); end;
+Output:
+Trigger created
+
+Query 47: find the details of item which are not available and item name ends with s 
+*select item_id,iname from store where status ='not-available' and iname like '%s' Output:
+item_id		iname 4011	tissue papers
+
+Query 48: find the details of chef where specialization starts with s 
+*select chef_id,cname,salary from chef where specialization like 's%' Output:
+chef_idcname salary
+1015	Srikanth	25000.00
+
+Query 49: find the details of customer from online ords where price between 180 and 300.
+*select customer_id, cname from online_ords where price between 180 and 300
+Output:
+customer_id	cname
+501	yogendra
+502	ramu
+506	charan
+513	kumar
+520	lahari
+ 
+
+Query 50: find the details of tables in the descending order of noof_seaters 
+*select table_id,floor,noof_seaters from tables order by noof_seaters desc 
+Output:
+
+table_id	floor	noof_seaters
+408	8	12
+410	10	12
+404	4	10
+409	9	8
+403	3	8
+402	1	6
+407	7	6
+401	2	4
+406	6	4
+405	5	2
